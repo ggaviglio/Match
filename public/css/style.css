@@ -16,6 +16,7 @@ body {
 .header {
   padding-bottom: 20px;
   border-bottom: 1px solid #e5e5e5;
+  margin-bottom:15px;
 }
 /* Make the masthead heading the same height as the navigation */
 .header h3 {
@@ -45,6 +46,7 @@ body {
 .jumbotron {
   text-align: center;
   border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 15px;
 }
 .jumbotron .btn {
   padding: 14px 24px;
@@ -75,5 +77,12 @@ body {
   /* Remove the bottom border on the jumbotron for visual effect */
   .jumbotron {
     border-bottom: 0;
+    margin-bottom: 30px;
   }
 }
+
+.page-header{
+  margin-top:0px;
+}
+
+
