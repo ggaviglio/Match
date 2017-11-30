@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
-const db = require('../db/index'); 
+const db = require('../db/index');
+var bcrypt = require('bcrypt');
+
+const saltRounds = 10; 
 
 // /* GET users listing. */
 // router.get('/', function(req, res, next) {
@@ -34,9 +37,11 @@ router.post('/register', function(req, res) {
     console.log('FORM FAIL username: ' + username);
     res.render('register',{title:'Card Match', errors:errors})
   } else {
-  db.any(`INSERT INTO users (username, password) VALUES ($1,$2)`,
-    [username, password]);
-    res.render('register', { title: 'Reg complete' });    
+    bcrypt.hash(password, saltRounds, function(err, hash) {
+      db.any(`INSERT INTO users (username, password) VALUES ($1,$2)`,
+        [username, hash]);
+        res.render('register', { title: 'Reg complete' });  
+    });  
   }
 });
 
