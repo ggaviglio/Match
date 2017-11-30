@@ -3,7 +3,7 @@
 module.exports = {
  up: (queryInterface, Sequelize) => {
   return queryInterface.createTable(
-   'test_table',
+   'users',
    {
      id: {
       type: Sequelize.INTEGER,
@@ -14,9 +14,13 @@ module.exports = {
      type: Sequelize.DATE,
      defaultValue: Sequelize.literal('NOW()'),
      allowNull: false         },
-     testString: {
+     username: {
        type:Sequelize.STRING,
        allowNull: false
+     },
+     password: {
+      type:Sequelize.STRING.BINARY,
+      allowNull: false
      }
    }
    );
