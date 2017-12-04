@@ -38,9 +38,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Express Session
 app.use(session({
-    secret: 'secret',
-    saveUninitialized: true,
-    resave: true
+    store: new (require('connect-pg-simple')(session))(),
+    secret: (process.env.SECRET_KEY || 'secret'),
+    saveUninitialized: false,
+    resave: false,
+    // cookie: { secure: false }
 }));
 
 // Passport init
@@ -66,13 +68,13 @@ app.use(expressValidator({
 }));
 
 // Connect Flash
-app.use(flash());
+// app.use(flash());
 
 // Global Vars
 app.use(function (req, res, next) {
-  res.locals.success_msg = req.flash('success_msg');
-  res.locals.error_msg = req.flash('error_msg');
-  res.locals.error = req.flash('error');
+  // res.locals.success_msg = req.flash('success_msg');
+  // res.locals.error_msg = req.flash('error_msg');
+  // res.locals.error = req.flash('error');
   res.locals.user = req.user || null;
   next();
 });
