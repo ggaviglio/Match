@@ -9,7 +9,7 @@
     "db:migrate": "sequelize db:migrate",
     "db:rollback": "sequelize db:migrate:undo",
     "postinstall": "sequelize db:migrate",
-    "postinstall": "psql emvbsrywqvvkoa < node_modules/connect-pg-simple/table.sql"
+    "postinstall": "psql d5813ccprnt2r3 < node_modules/connect-pg-simple/table.sql"
   },
   "dependencies": {
     "bcrypt": "^1.0.3",
