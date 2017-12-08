@@ -8,7 +8,7 @@
     "db:create:migration": "sequelize migration:generate --name ",
     "db:migrate": "sequelize db:migrate",
     "db:rollback": "sequelize db:migrate:undo",
-    "postinstall": "sequelize db:migrate",
+    "postinstall": "sequelize db:migrate"
   },
   "dependencies": {
     "bcrypt": "^1.0.3",
