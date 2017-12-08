@@ -10,6 +10,7 @@ var flash = require('connect-flash');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var hbs = require('express-handlebars');
+var bcrypt = require('bcrypt');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -45,7 +46,7 @@ app.use(session({
     // cookie: { secure: false }
 }));
 
-// Passport init
+// Passport init 
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -70,17 +71,58 @@ app.use(expressValidator({
 // Connect Flash
 // app.use(flash());
 
-// Global Vars
-app.use(function (req, res, next) {
-  // res.locals.success_msg = req.flash('success_msg');
-  // res.locals.error_msg = req.flash('error_msg');
-  // res.locals.error = req.flash('error');
-  res.locals.user = req.user || null;
+// // Global Vars
+app.use(function(req, res, next) {
+  res.locals.isAuthenticated = req.isAuthenticated();
   next();
 });
+// app.use(function (req, res, next) {
+//   // res.locals.success_msg = req.flash('success_msg');
+//   // res.locals.error_msg = req.flash('error_msg');
+//   // res.locals.error = req.flash('error');
+//   res.locals.user = req.user || null;
+//   next();
+// });
+
+
 
 app.use('/', index);
 app.use('/users', users);
+
+var passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy;
+
+//passport local db check init
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    console.log(username);
+    console.log(password);
+    const db = require('./db/index');
+
+
+    db.any('SELECT id, password FROM users WHERE username = $1', [username])
+        .then(function(data) {
+            // success;
+            // console.log(data);
+            if (data.length == 0) {
+              console.log('no match');
+              return done(null, false, {message: 'Invalid Login'});
+            }
+            console.log('username match');
+            const hash = data[0].password.toString();
+            bcrypt.compare(password, hash, function(err, response) {
+              if (response == true){
+                return done(null, {user_id: data[0].id});
+              }
+              return done(null, false);
+            });
+        })
+        .catch(function(error) {
+            // error;
+            return done(error, false);
+        });
+  }
+));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -3,15 +3,32 @@ var router = express.Router();
 
 /* GET home or profile page. */
 router.get('/', function(req, res) {
-	console.log(req.user);
-	console.log(req.isAuthenticated())
 	if (req.isAuthenticated() == true){
-		res.render('profile', { title: 'Card Match - profile' });
+		res.redirect('/profile');
 	} else {
 		res.render('index', { title: 'Card Match - index' });
-	}
-    
+	}   
 });
+
+/* GET home or profile page. */
+router.get('/profile', function(req, res) {
+	if (req.isAuthenticated() == false){
+		res.redirect('../');
+	} else {
+		res.render('profile', { title: 'Card Match - index' });
+	}   
+});
+
+
+// /* GET profile page. */
+// router.get('/profile', function(req, res) {
+// 	console.log(req.user);
+// 	console.log(req.isAuthenticated())
+// 	if (req.isAuthenticated() == true){
+// 		res.render('profile', { title: 'Card Match - profile' });
+// 	} 
+    
+// });
 
 // /* GET profile page. */ //only runs routs if authentication passes
 // router.get('/', authenticationMiddleware() ,function(req, res) {

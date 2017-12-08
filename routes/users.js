@@ -16,15 +16,31 @@ router.get('/login', function(req, res) {
   res.render('login', { title: 'Card Match' });
 });
 
+/* Logout get*/
+router.get('/logout', function(req, res) {
+  req.logout();
+  req.session.destroy();
+  res.redirect('../');
+});
+
 /* Register get*/
 router.get('/register', function(req, res) {
   res.render('register', { title: 'Card Match' });
 });
 
+/* Login post */
+router.post('/login', passport.authenticate(
+  'local', {
+    successRedirect: '../profile',
+    failureRedirect: '../users/register'
+}));
+
 // /* Login post */
-// router.post('/login', passport.authenticate() {
-
-
+// router.post('/login', function(req, res, next) {
+//   passport.authenticate('local', function(err, user, info) {
+//     // successRedirect: '../',
+//     // failureRedirect: '../users/register'
+//   })
 // });
 
 /* Register post */
@@ -36,7 +52,7 @@ router.post('/register', function(req, res, next) {
   //validation
   req.checkBody('username', 'Name is required').notEmpty();
   req.checkBody('password', 'Password is required').notEmpty();
-  req.checkBody('password2', 'Password do not match').equals(req.body.password);
+  req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
 
   var errors = req.validationErrors();
   var user_id = null;
@@ -49,10 +65,15 @@ router.post('/register', function(req, res, next) {
       db.one(`INSERT INTO users (username, password) VALUES ($1,$2) RETURNING id`,
         [username, hash]).then(data => {
           user_id = data.id;
-          console.log('user_id: '+ user_id);
+          console.log(data);
           req.login(user_id, function(err) {
-            res.redirect('../');
+            setTimeout(function(){
+            console.log("login wait");
+            
+            }, 2000);
+            
           });
+          res.redirect('../profile');
         });                 
     });  
   }
