@@ -29,6 +29,7 @@ router.get('/game', function(req, res) {
 });
 
 
+
 // /* GET profile page. */
 // router.get('/profile', function(req, res) {
 // 	console.log(req.user);

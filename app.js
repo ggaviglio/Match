@@ -11,11 +11,28 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var hbs = require('express-handlebars');
 var bcrypt = require('bcrypt');
+var http = require('http');
+var socketio = require('socket.io');
+
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
+//S Socket server created
+var socketServer = http.createServer(app);
+var io = socketio(socketServer);
+
+app.io = io;
+
+var game = require('./routes/game')(io);
+
+
+/* Listen for socket connection on port 3002 */
+socketServer.listen(3002, function(){
+  console.log('Socket server listening on : 3002');
+});
 
 if(process.env.NODE_ENV === 'development') {
  require("dotenv").config();
@@ -49,6 +66,7 @@ app.use(session({
 // Passport init 
 app.use(passport.initialize());
 app.use(passport.session());
+
 
 // Express Validator
 app.use(expressValidator({
@@ -88,6 +106,7 @@ app.use(function(req, res, next) {
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/game', game);
 
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
