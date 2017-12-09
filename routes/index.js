@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home or profile page. */
+/* GET home page. */
 router.get('/', function(req, res) {
 	if (req.isAuthenticated() == true){
 		res.redirect('/profile');
@@ -10,12 +10,21 @@ router.get('/', function(req, res) {
 	}   
 });
 
-/* GET home or profile page. */
+/* GET profile page. */
 router.get('/profile', function(req, res) {
 	if (req.isAuthenticated() == false){
 		res.redirect('../');
 	} else {
 		res.render('profile', { title: 'Card Match - index' });
+	}   
+});
+
+/* GET profile page. */
+router.get('/game', function(req, res) {
+	if (req.isAuthenticated() == false){
+		res.redirect('../');
+	} else {
+		res.render('game', { title: 'Card Match - game' });
 	}   
 });
 
