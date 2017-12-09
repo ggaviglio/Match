@@ -18,23 +18,32 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-
 var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-app.listen(port, function(){
-  console.log('Server started on port '+ port);
+
+// server.on('error', onError);
+// server.on('listening', onListening);
+
+// Socket server setup
+var socketServer = require('http').createServer(app);
+var io = require('socket.io')(socketServer);
+
+/* Listen for socket connection on port 3002 */
+socketServer.listen(3002, function(){
+  console.log('Socket server listening on : 3002');
 });
-server.on('error', onError);
-server.on('listening', onListening);
 
-// Socket setup
-var io = require('socket.io').listen(server);
+// This is the port our app server is running on
+server.listen(port, function(){
+  console.log('Server listening on : port');
+});
 
-io.on('connection', function (socket) {
-  console.log('connected');
+/* This event will emit when client connects to the socket server */
+io.on('connection', function(socket){
+  console.log('Socket connection established');
 });
 
 function normalizePort(val) {
