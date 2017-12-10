@@ -8,10 +8,11 @@ var cards = createRandomCards();
 
 /* GET profile page. */
 router.get('/', function(req, res) {
+	console.log(req.user.username);
 	if (req.isAuthenticated() == false){
 		res.redirect('../');
 	} else {
-		res.render('game', { title: 'Card Match', username: req.username, test_username: 'test username' });
+		res.render('game', { title: 'Card Match', username: req.user.username, test_username: 'test username' });
 	}   
 });
 
@@ -39,9 +40,10 @@ function createGame(io, socket)	{
 
 	console.log("You are in room no. " + roomno);
 
-	socket.on('message', function(data) {        
+	socket.on('message', function(data) {  
+			message = data.username + ': ' + data.message;      
         	io.to(data.room).emit('message',{
-        		message: data.message
+        		message: message
         	});
     	});
 	socket.on('join', function(data) {  
@@ -52,11 +54,17 @@ function createGame(io, socket)	{
         	message = 'Game started. ' + data.username + ' make a play.';
         	if(data.start == true){
         		io.to(data.room).emit('message',{
-        		message: message
-        	});
-        		//emit message, if it is your turn start
+        			message: message
+        		});
+        		io.to(data.room).emit('takeTurn',{
+
+        		});
         	}
     	});
+
+	socket.on('switch', function(data) {
+		io.to(data.room).emit('switchTurn',{})
+	});
 
 }
 

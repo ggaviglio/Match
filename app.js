@@ -110,7 +110,7 @@ passport.use(new LocalStrategy(
     const db = require('./db/index');
 
 
-    db.any('SELECT id, password FROM users WHERE username = $1', [username])
+    db.any('SELECT username, id, password FROM users WHERE username = $1', [username])
         .then(function(data) {
             // success;
             // console.log(data);
