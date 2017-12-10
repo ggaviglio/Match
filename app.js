@@ -12,7 +12,6 @@ var LocalStrategy = require('passport-local').Strategy;
 var hbs = require('express-handlebars');
 var bcrypt = require('bcrypt');
 var http = require('http');
-var https = require('https');
 var socketio = require('socket.io');
 
 
@@ -22,7 +21,7 @@ var users = require('./routes/users');
 var app = express();
 
 //S Socket server created
-var socketServer = https.createServer(app);
+var socketServer = http.createServer(app);
 var io = socketio(socketServer);
 
 app.io = io;
