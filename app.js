@@ -21,18 +21,18 @@ var users = require('./routes/users');
 var app = express();
 
 //S Socket server created
-var socketServer = http.createServer(app);
-var io = socketio(socketServer);
+// var socketServer = http.createServer(app);
+var io = socketio();
 
 app.io = io;
 
 var game = require('./routes/game')(io);
 
 
-/* Listen for socket connection on port 3002 */
-socketServer.listen(80, function(){
-  console.log('Socket server listening on : 3002');
-});
+// /* Listen for socket connection on port 3002 */
+// socketServer.listen(3002, function(){
+//   console.log('Socket server listening on : 3002');
+// });
 
 if(process.env.NODE_ENV === 'development') {
  require("dotenv").config();
