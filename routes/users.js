@@ -6,10 +6,11 @@ var passport = require('passport');
 
 const saltRounds = 10; 
 
-// /* GET users listing. */
-// router.get('/', function(req, res, next) {
-//   res.send('respond with a resource');
-// });
+/* GET users listing. */
+router.get('/', function(req, res, next) {
+  console.log(req.user.username);
+  res.redirect('../');
+});
 
 /* Login get*/
 router.get('/login', function(req, res) {
@@ -34,14 +35,6 @@ router.post('/login', passport.authenticate(
     successRedirect: '../profile',
     failureRedirect: '../users/register'
 }));
-
-// /* Login post */
-// router.post('/login', function(req, res, next) {
-//   passport.authenticate('local', function(err, user, info) {
-//     // successRedirect: '../',
-//     // failureRedirect: '../users/register'
-//   })
-// });
 
 /* Register post */
 router.post('/register', function(req, res, next) {

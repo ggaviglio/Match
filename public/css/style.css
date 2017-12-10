@@ -85,4 +85,46 @@ body {
   margin-top:0px;
 }
 
+.card-row{
+  margin-bottom: 10px;
+}
+.card{
+  padding-left: 10px  
+  padding-right: 10px  
+}
+
+.card-contents{
+  border: 2px solid lightgrey;
+  padding: 10px;
+  font-size: 20px;
+  background-color:white;
+}
+
+.card-contents:hover{
+  background-color:powderblue;
+}
+
+.status-row{
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+#status{
+  margin-bottom: 10px;
+}
+
+.game-jumbo{
+  padding-top:15px; 
+  padding-bottom:0px;
+  margin-bottom: 5px;
+}
+
+.list-group{
+  height:100px;
+  /*max-height: 200px;*/
+  overflow:scroll;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 0px;
+}
+
 
