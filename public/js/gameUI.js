@@ -1,4 +1,4 @@
-var socket = io.connect(window.location.hostname + ':8080');
+var socket = io.connect();
 
 socket.on('connect', function() {
   console.log('Client connected');
