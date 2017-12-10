@@ -122,7 +122,7 @@ passport.use(new LocalStrategy(
             const hash = data[0].password.toString();
             bcrypt.compare(password, hash, function(err, response) {
               if (response == true){
-                return done(null, {user_id: data[0].id});
+                return done(null, data[0]);
               }
               return done(null, false);
             });
