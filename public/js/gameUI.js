@@ -22,21 +22,43 @@ socket.on('gameCreate', function(data) {
 	
 	socket.removeAllListeners("gameCreate");
 	currentGame = new Game(data);
+	joinStatus(currentGame.turn);
 	createCards(currentGame.cards);
+
+	
+	
 });
 
+var joinStatus = function(turn_status){
+	var gameStatus = document.getElementById("status");
+	if(currentGame.turn == true){
+		gameStatus.innerHTML = "Wait for player to join...";
+		start = false;	
+	} else {
+		gameStatus.innerHTML = "Wait for your turn...";	
+		start = true;
+	}
+	socket.emit('join', {
+			room: currentGame.room,
+			username: 'dumby_username',
+			start: start
+		})
+}
+
 var createCards = function(dealtCards)	{
-	var cards = document.getElementsByClassName("card");
+	var cards = document.getElementsByClassName("card-contents");
 	for(var i = 0; i < cards.length; i++)	{
 		cards[i].innerHTML = dealtCards[i];
 	}
 }
 
+
+
 var Game = function(socketData)	{
-	this.nickname = socketData.nickname;
 	this.room = socketData.room;
-	this.cards = socketData.cards
+	this.cards = socketData.cards;
 	this.score = 0;
+	this.turn = socketData.turn;
 }
 
 window.onload = function()	{
@@ -46,7 +68,7 @@ window.onload = function()	{
 		if(input.length == 0 )	return;
 
 		socket.emit('message', {
-			nickname: currentGame.room,
+			room: currentGame.room,
 			message: input
 		})	
 	});

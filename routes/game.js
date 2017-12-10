@@ -1,29 +1,62 @@
 var express = require('express');
 var router = express.Router();
+var passport = require('passport');
 
 var roomList = [];
 var roomno = 1;
 var cards = createRandomCards();
 
-function createGame(io, socket)	{
+/* GET profile page. */
+router.get('/', function(req, res) {
+	if (req.isAuthenticated() == false){
+		res.redirect('../');
+	} else {
+		res.render('game', { title: 'Card Match', username: req.username, test_username: 'test username' });
+	}   
+});
 
+function createGame(io, socket)	{
+	var yourTurn = true;
 	if(io.nsps['/'].adapter.rooms["room-"+roomno] && io.nsps['/'].adapter.rooms["room-"+roomno].length > 1) {
 		cards = createRandomCards();
 		roomno++;
+	} else if(io.nsps['/'].adapter.rooms["room-"+roomno] && io.nsps['/'].adapter.rooms["room-"+roomno].length == 1)  {
+		yourTurn= false;
 	}
 	
 	var roomName = "room-"+roomno;
 	socket.join(roomName);
 	roomList[socket.id] = roomName;
 
+	
+
 	//Send this event to everyone in the room.
 	io.to(roomName).emit('gameCreate', {
-		nickname : roomList[socket.id],
 		room : roomName,
-		cards: cards
+		cards: cards,
+		turn: yourTurn
 	});
 
 	console.log("You are in room no. " + roomno);
+
+	socket.on('message', function(data) {        
+        	io.to(data.room).emit('message',{
+        		message: data.message
+        	});
+    	});
+	socket.on('join', function(data) {  
+			var message = data.username + ' joined ' + data.room;      
+        	io.to(data.room).emit('message',{
+        		message: message
+        	});
+        	message = 'Game started. ' + data.username + ' make a play.';
+        	if(data.start == true){
+        		io.to(data.room).emit('message',{
+        		message: message
+        	});
+        		//emit message, if it is your turn start
+        	}
+    	});
 
 }
 
@@ -62,29 +95,12 @@ function createRandomCards()	{
 	return randomCards;
 }
 
-/* GET profile page. */
-router.get('/', function(req, res) {
-	if (req.isAuthenticated() == false){
-		res.redirect('../');
-	} else {
-		res.render('game', { title: 'Card Match - game' });
-	}   
-});
-
 module.exports = function(io)	{
 
 	io.on('connection', function(socket){		
 		createGame(io, socket);
-		socket.on('message', function(data) {        
-        	io.to(data.nickname).emit('message',{
-        		message: data.message
-        	});
-    	});
+		
 	});
 
 	return router;
 }
-
-
-
-

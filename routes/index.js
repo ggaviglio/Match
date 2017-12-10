@@ -6,7 +6,7 @@ router.get('/', function(req, res) {
 	if (req.isAuthenticated() == true){
 		res.redirect('/profile');
 	} else {
-		res.render('index', { title: 'Card Match - index' });
+		res.render('index', { title: 'Card Match' });
 	}   
 });
 
@@ -15,29 +15,9 @@ router.get('/profile', function(req, res) {
 	if (req.isAuthenticated() == false){
 		res.redirect('../');
 	} else {
-		res.render('profile', { title: 'Card Match - index' });
+		res.render('profile', { title: 'Card Match' });
 	}   
 });
-
-
-
-
-// /* GET profile page. */
-// router.get('/profile', function(req, res) {
-// 	console.log(req.user);
-// 	console.log(req.isAuthenticated())
-// 	if (req.isAuthenticated() == true){
-// 		res.render('profile', { title: 'Card Match - profile' });
-// 	} 
-    
-// });
-
-// /* GET profile page. */ //only runs routs if authentication passes
-// router.get('/', authenticationMiddleware() ,function(req, res) {
-// 	console.log(req.user);
-// 	console.log(req.isAuthenticated())
-//     res.render('profile', { title: 'Card Match' });
-// });
 
 /* GET about page. */
 router.get('/about', function(req, res, next) {
