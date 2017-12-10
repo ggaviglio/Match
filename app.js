@@ -30,7 +30,7 @@ var game = require('./routes/game')(io);
 
 
 /* Listen for socket connection on port 3002 */
-socketServer.listen(3002, function(){
+socketServer.listen(80, function(){
   console.log('Socket server listening on : 3002');
 });
 
@@ -92,6 +92,7 @@ app.use(expressValidator({
 app.use(function(req, res, next) {
   // res.locals.isAuthenticated = req.isAuthenticated();
   res.locals.user = req.user || null;
+  res.locals.environment = process.env.NODE_ENV;
   next();
 });
 
