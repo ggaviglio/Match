@@ -1,4 +1,4 @@
-var socket = io.connect('http://csc667match.herokuapp.com:3002');
+var socket = io.connect(window.location.hostname + ':3002');
 
 socket.on('connect', function() {
   console.log('Client connected');
