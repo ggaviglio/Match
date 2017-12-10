@@ -75,8 +75,12 @@ module.exports = function(io)	{
 
 	io.on('connection', function(socket){		
 		createGame(io, socket);
+		socket.on('message', function(data) {        
+        	io.to(data.nickname).emit('message',{
+        		message: data.message
+        	});
+    	});
 	});
-
 
 	return router;
 }

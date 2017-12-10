@@ -19,14 +19,6 @@ router.get('/profile', function(req, res) {
 	}   
 });
 
-/* GET profile page. */
-router.get('/game', function(req, res) {
-	if (req.isAuthenticated() == false){
-		res.redirect('../');
-	} else {
-		res.render('game', { title: 'Card Match - game' });
-	}   
-});
 
 
 
