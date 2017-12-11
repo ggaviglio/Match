@@ -5,10 +5,11 @@ var passport = require('passport');
 var roomList = [];
 var roomno = 1;
 var cards = createRandomCards();
+username = 'jlkjk';
 
 /* GET profile page. */
 router.get('/', function(req, res) {
-	console.log(req.user.username);
+	username = req.user.username;
 	if (req.isAuthenticated() == false){
 		res.redirect('../');
 	} else {
@@ -30,10 +31,12 @@ function createGame(io, socket)	{
 	roomList[socket.id] = roomName;
 
 	//Send this event to everyone in the room.
+	console.log('game.js: ' + username);
 	io.to(roomName).emit('gameCreate', {
 		room : roomName,
 		cards: cards,
-		turn: yourTurn
+		turn: yourTurn,
+		username: username
 	});
 
 	console.log("You are in room no. " + roomno);
@@ -60,7 +63,7 @@ function joinGame(io,socket) {
         		io.to(data.room).emit('takeTurn',{});
         	}
     	});
-    	socket.on('switch', function(data) {
+    	socket.on('endTurn', function(data) {
     		console.log('it did switch');
 			io.to(data.room).emit('switchTurn',{});
 			io.to(data.room).emit('takeTurn',{});

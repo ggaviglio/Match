@@ -25,7 +25,7 @@ socket.on('gameCreate', function(data) {
 	socket.removeAllListeners("gameCreate");
 	currentGame = new Game(data);
 	joinStatus(currentGame.turn);
-	createCards(currentGame.cards);
+	createCards(currentGame.cards);	
 	handleTurn(socket);	
 });
 
@@ -39,9 +39,8 @@ var handleTurn = function(socket) {
 			
 			setTimeout(function(){
 				//take turn
-					//do stuff
-            	//switch turn   
-            	socket.emit('switch', {room: currentGame.room});
+					//do stuff 
+            	socket.emit('endTurn', {room: currentGame.room});
             }, 2000);
 		} else {
 			gameStatus.innerHTML = "Wait for your turn...";
@@ -49,7 +48,7 @@ var handleTurn = function(socket) {
 	});
 
 	socket.on('switchTurn', function(data) {
-		console.log('switchTurn ran');
+		console.log('endTurn ran');
 		if(currentGame.turn == true){
 			currentGame.turn = false;
 			//event listeners destory
@@ -72,7 +71,7 @@ var joinStatus = function(turn_status){
 	}
 	socket.emit('join', {
 			room: currentGame.room,
-			username: username,
+			username: currentGame.username,
 			start: start
 		})
 }
@@ -91,6 +90,7 @@ var Game = function(socketData) {
     this.cards = socketData.cards;
     this.score = 0;
     this.turn = socketData.turn;
+    this.username = socketData.username;
     this.revealedCards = 0;
     this.correctCards = 0;
 }
