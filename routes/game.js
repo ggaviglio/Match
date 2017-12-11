@@ -29,8 +29,6 @@ function createGame(io, socket)	{
 	socket.join(roomName);
 	roomList[socket.id] = roomName;
 
-	
-
 	//Send this event to everyone in the room.
 	io.to(roomName).emit('gameCreate', {
 		room : roomName,
@@ -45,27 +43,32 @@ function createGame(io, socket)	{
         	io.to(data.room).emit('message',{
         		message: message
         	});
-    	});
-	socket.on('join', function(data) {  
+    });
+}
+
+function joinGame(io,socket) {		
+		socket.on('join', function(data) {  
 			var message = data.username + ' joined ' + data.room;      
         	io.to(data.room).emit('message',{
         		message: message
         	});
-        	message = 'Game started. ' + data.username + ' make a play.';
+        	message = 'Game started.';
         	if(data.start == true){
         		io.to(data.room).emit('message',{
         			message: message
         		});
-        		io.to(data.room).emit('takeTurn',{
-
-        		});
+        		io.to(data.room).emit('takeTurn',{});
         	}
     	});
+    	socket.on('switch', function(data) {
+    		console.log('it did switch');
+			io.to(data.room).emit('switchTurn',{});
+			io.to(data.room).emit('takeTurn',{});
+		});
+}
 
-	socket.on('switch', function(data) {
-		io.to(data.room).emit('switchTurn',{})
-	});
-
+function handleGame(io,socket) {
+	
 }
 
 // Taken from stackoverflow to shuffle cards
@@ -107,7 +110,8 @@ module.exports = function(io)	{
 
 	io.on('connection', function(socket){		
 		createGame(io, socket);
-		
+		joinGame(io, socket);
+		handleGame(io, socket);		
 	});
 
 	return router;

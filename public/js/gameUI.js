@@ -1,4 +1,6 @@
 var socket = io.connect();
+var cardsChosen = [];
+var successfulCardMatches = [];
 
 socket.on('connect', function() {
   console.log('Client connected');
@@ -27,35 +29,40 @@ socket.on('gameCreate', function(data) {
 	handleTurn(socket);	
 });
 
+var handleTurn = function(socket) {
 	socket.on('takeTurn', function(data) {
-		console.log('did it work?');
+
+		console.log('takeTurn ran');
 		if(currentGame.turn == true){
+			//event listeners add
 			gameStatus.innerHTML = "Your turn!";
+			
 			setTimeout(function(){
 				//take turn
+					//do stuff
             	//switch turn   
-            	socket.emit('switch', {});
+            	socket.emit('switch', {room: currentGame.room});
             }, 2000);
 		} else {
 			gameStatus.innerHTML = "Wait for your turn...";
 		}
 	});
 
-	socket.on('switchTurn', function() {
+	socket.on('switchTurn', function(data) {
+		console.log('switchTurn ran');
 		if(currentGame.turn == true){
-			turn = false;
+			currentGame.turn = false;
+			//event listeners destory
 		} else {
-			turn = true;
+			currentGame.turn = true;
+			//event listeners add
 		}
-		//emit message handleturn
 	})
-
-var handleTurn = function(socket) {
-
 }
 
 var joinStatus = function(turn_status){
 	gameStatus = document.getElementById("status");
+	//event listeners destory
 	if(currentGame.turn == true){
 		gameStatus.innerHTML = "Wait for player to join...";
 		start = false;	
@@ -79,25 +86,57 @@ var createCards = function(dealtCards)	{
 
 
 
-var Game = function(socketData)	{
-	this.room = socketData.room;
-	this.cards = socketData.cards;
-	this.score = 0;
-	this.turn = socketData.turn;
+var Game = function(socketData) {
+    this.room = socketData.room;
+    this.cards = socketData.cards;
+    this.score = 0;
+    this.turn = socketData.turn;
+    this.revealedCards = 0;
+    this.correctCards = 0;
 }
-
-window.onload = function()	{
-
-	document.getElementById("messageButton").addEventListener("click", function()	{
-		var input = document.getElementById("messageInput").value;
-		if(input.length == 0 )	return;
-
-		socket.emit('message', {
-			room: currentGame.room,
-			message: input,
-			username: username
-
-		})	
-	});
-
+var checkCards = function() {
+    var classname = document.getElementsByClassName("card-contents");
+    if(classname[cardsChosen[0]].innerHTML == classname[cardsChosen[1]].innerHTML)  {
+        successfulCardMatches.push(classname[cardsChosen[0]].getAttribute("data-value"));
+        successfulCardMatches.push(classname[cardsChosen[1]].getAttribute("data-value"));
+        classname[cardsChosen[0]].removeEventListener('click', myFunction, false);
+        classname[cardsChosen[1]].removeEventListener('click', myFunction, false);              
+        console.log("Cards match");
+    }
+    console.log(classname[cardsChosen[0]].innerHTML);
+    console.log(classname[cardsChosen[1]].innerHTML);
+}
+window.onload = function()  {
+    document.getElementById("messageButton").addEventListener("click", function()   {
+        var input = document.getElementById("messageInput").value;
+        if(input.length == 0 )  return;
+        socket.emit('message', {
+            room: currentGame.room,
+            message: input,
+            username: username
+        })  
+    });
+    var classname = document.getElementsByClassName("card-contents");
+    myFunction = function() {
+        var index = this.getAttribute("data-value");
+        if(cardsChosen.indexOf(index) !== -1)   {
+            console.log(index + " already in list");
+        }
+        else if(currentGame.revealedCards == 1) {
+            console.log("Pused next card");
+            cardsChosen.push(index);
+            console.log("2 cards in array");
+            checkCards();
+            cardsChosen = [];
+            currentGame.revealedCards = 0;
+        }
+        else    {
+            console.log("Paused next card");
+            cardsChosen.push(index);
+            currentGame.revealedCards++;
+        }
+    };
+    for (var i = 0; i < classname.length; i++) {
+        classname[i].addEventListener('click', myFunction, false);
+    }
 }
