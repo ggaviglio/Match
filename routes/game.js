@@ -6,6 +6,7 @@ var roomList = [];
 var roomno = 1;
 var cards = createRandomCards();
 username = null;
+playersJoined = 0;
 
 /* GET profile page. */
 router.get('/', function(req, res) {
@@ -19,13 +20,33 @@ router.get('/', function(req, res) {
 
 function createGame(io, socket)	{
 	var yourTurn = true;
-	if(io.nsps['/'].adapter.rooms["room-"+roomno] && io.nsps['/'].adapter.rooms["room-"+roomno].length > 1) {
+	// if(io.nsps['/'].adapter.rooms["room-"+roomno] && io.nsps['/'].adapter.rooms["room-"+roomno].length > 1) {
+	// 	cards = createRandomCards();
+	// 	roomno++;
+	// } else if(io.nsps['/'].adapter.rooms["room-"+roomno] && io.nsps['/'].adapter.rooms["room-"+roomno].length == 1)  {
+	// 	yourTurn= false;
+	// }
+
+	if (io.nsps['/'].adapter.rooms["room-"+roomno]){
+		length = io.nsps['/'].adapter.rooms["room-"+roomno].length;
+	} else {
+		length = 0;
+	}
+
+	if(playersJoined > 1) {
 		cards = createRandomCards();
 		roomno++;
-	} else if(io.nsps['/'].adapter.rooms["room-"+roomno] && io.nsps['/'].adapter.rooms["room-"+roomno].length == 1)  {
+		playersJoined=0;
+	} else if(playersJoined == 1 && length == 1)  {
 		yourTurn= false;
+	} else if(playersJoined == 1 && length == 0)  {
+		cards = createRandomCards();
+		roomno++;
+		playersJoined=0;
 	}
+	playersJoined++;
 	
+
 	var roomName = "room-"+roomno;
 	socket.join(roomName);
 	roomList[socket.id] = roomName;
