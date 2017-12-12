@@ -5,7 +5,7 @@ var passport = require('passport');
 var roomList = [];
 var roomno = 1;
 var cards = createRandomCards();
-username = 'jlkjk';
+username = null;
 
 /* GET profile page. */
 router.get('/', function(req, res) {
@@ -70,10 +70,6 @@ function joinGame(io,socket) {
 		});
 }
 
-function handleGame(io,socket) {
-	
-}
-
 // Taken from stackoverflow to shuffle cards
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 function shuffle(array) {
@@ -113,8 +109,7 @@ module.exports = function(io)	{
 
 	io.on('connection', function(socket){		
 		createGame(io, socket);
-		joinGame(io, socket);
-		handleGame(io, socket);		
+		joinGame(io, socket);		
 	});
 
 	return router;
