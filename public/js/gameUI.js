@@ -127,6 +127,7 @@ var Game = function(socketData) {
     this.username = socketData.username;
     this.revealedCards = 0;
     this.correctCards = 0;
+    this.matches = 0;
 }
 var checkCards = function() {
     var classname = document.getElementsByClassName("card-contents");
@@ -136,6 +137,14 @@ var checkCards = function() {
         classname[cardsChosen[0]].removeEventListener('click', myFunction, false);
         classname[cardsChosen[1]].removeEventListener('click', myFunction, false);              
         console.log("Cards match");
+        currentGame.matches++;
+        input = 'made match ' + matches + 'of 8'
+        socket.emit('message', {
+            room: currentGame.room,
+            message: input,
+            username: currentGame.username
+        });
+
     }
     console.log(classname[cardsChosen[0]].innerHTML);
     console.log(classname[cardsChosen[1]].innerHTML);
