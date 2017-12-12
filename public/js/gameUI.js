@@ -31,8 +31,6 @@ socket.on('gameCreate', function(data) {
 
 var handleTurn = function(socket) {
 	socket.on('takeTurn', function(data) {
-
-		console.log('takeTurn ran');
 		if(currentGame.turn == true){
 			//event listeners add
 			gameStatus.innerHTML = "Your turn!";
@@ -48,7 +46,6 @@ var handleTurn = function(socket) {
 	});
 
 	socket.on('switchTurn', function(data) {
-		console.log('endTurn ran');
 		if(currentGame.turn == true){
 			currentGame.turn = false;
 			//event listeners destory
