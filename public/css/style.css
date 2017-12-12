@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Anton');
+
 /* Space out content a bit */
 body {
   padding-top: 20px;
@@ -95,10 +97,12 @@ body {
 
 .card-contents{
   border: 2px solid lightgrey;
-  padding: 10px;
-  font-size: 20px;
-  background-color:#FCFCFC;
+  padding: 5px;
+  font-size: 28px;
+  background-color: #404040;
   height: 50px;
+  color: rgb(101,164,215);
+  font-family: 'Anton', sans-serif;
 }
 
 /*.card-contents:hover{

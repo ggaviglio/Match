@@ -181,8 +181,8 @@ function hideCards()  {
         for(var i = 0; i < cards.length; i++)   {
             var index = cards[i].getAttribute("data-value");
             if(successfulCardMatches.indexOf(index) === -1) {
-                cards[i].innerHTML = "";
-                cards[i].style.backgroundColor = '#FCFCFC';
+                cards[i].innerHTML = "M!";
+                cards[i].style.backgroundColor = '#404040';
             }
         }
     }, 2000);  
