@@ -138,7 +138,7 @@ var checkCards = function() {
         classname[cardsChosen[1]].removeEventListener('click', myFunction, false);              
         console.log("Cards match");
         currentGame.matches++;
-        input = 'made match ' + matches + 'of 8'
+        input = 'made match ' + currentGame.matches + ' of 8'
         socket.emit('message', {
             room: currentGame.room,
             message: input,
