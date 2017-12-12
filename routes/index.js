@@ -6,7 +6,7 @@ router.get('/', function(req, res) {
 	if (req.isAuthenticated() == true){
 		res.redirect('/profile');
 	} else {
-		res.render('index', { title: 'Card Match' });
+		res.render('index', { title: 'Match!' });
 	}   
 });
 
@@ -15,13 +15,13 @@ router.get('/profile', function(req, res) {
 	if (req.isAuthenticated() == false){
 		res.redirect('../');
 	} else {
-		res.render('profile', { title: 'Card Match' });
+		res.render('profile', { title: 'Match!', username: req.user.username });
 	}   
 });
 
 /* GET about page. */
 router.get('/about', function(req, res, next) {
-  res.render('about', { title: 'Card Match' });
+  res.render('about', { title: 'Match!' });
 });
 
 function authenticationMiddleware () {  

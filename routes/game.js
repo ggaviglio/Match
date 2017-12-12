@@ -14,19 +14,21 @@ router.get('/', function(req, res) {
 	if (req.isAuthenticated() == false){
 		res.redirect('../');
 	} else {
-		res.render('game', { title: 'Card Match', username: req.user.username, test_username: 'test username' });
+		res.render('game', { title: 'Match!', username: req.user.username, test_username: 'test username' });
 	}   
 });
 
+function watchGame(io,socket) {		
+    	socket.on('endGame', function(data) {
+    		io.to(data.room).emit('showResults',{
+    			username: data.username,
+    			turnsTaken: data.turnsTaken
+    		}); 
+		});
+}
+
 function createGame(io, socket)	{
 	var yourTurn = true;
-	// if(io.nsps['/'].adapter.rooms["room-"+roomno] && io.nsps['/'].adapter.rooms["room-"+roomno].length > 1) {
-	// 	cards = createRandomCards();
-	// 	roomno++;
-	// } else if(io.nsps['/'].adapter.rooms["room-"+roomno] && io.nsps['/'].adapter.rooms["room-"+roomno].length == 1)  {
-	// 	yourTurn= false;
-	// }
-
 	if (io.nsps['/'].adapter.rooms["room-"+roomno]){
 		length = io.nsps['/'].adapter.rooms["room-"+roomno].length;
 	} else {
@@ -72,7 +74,7 @@ function createGame(io, socket)	{
 
 function joinGame(io,socket) {		
 		socket.on('join', function(data) {  
-			var message = data.username + ' joined ' + data.room;      
+			var message = data.username + ' joined room';      
         	io.to(data.room).emit('message',{
         		message: message
         	});
@@ -85,7 +87,6 @@ function joinGame(io,socket) {
         	}
     	});
     	socket.on('endTurn', function(data) {
-    		console.log('it did switch');
 			io.to(data.room).emit('switchTurn',{});
 			io.to(data.room).emit('takeTurn',{});
 		});
@@ -130,7 +131,8 @@ module.exports = function(io)	{
 
 	io.on('connection', function(socket){		
 		createGame(io, socket);
-		joinGame(io, socket);		
+		joinGame(io, socket);	
+		watchGame(io, socket);	
 	});
 
 	return router;

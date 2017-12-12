@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
 
 /* Login get*/
 router.get('/login', function(req, res) {
-  res.render('login', { title: 'Card Match' });
+  res.render('login', { title: 'Match!' });
 });
 
 /* Logout get*/
@@ -26,7 +26,7 @@ router.get('/logout', function(req, res) {
 
 /* Register get*/
 router.get('/register', function(req, res) {
-  res.render('register', { title: 'Card Match' });
+  res.render('register', { title: 'Match!' });
 });
 
 /* Login post */
@@ -52,21 +52,14 @@ router.post('/register', function(req, res, next) {
 
   if(errors){
     console.log('FORM FAIL username: ' + username);
-    res.render('register',{title:'Card Match', errors:errors});
+    res.render('register',{title:'Match!', errors:errors});
   } else {
     bcrypt.hash(password, saltRounds, function(err, hash) {
       db.one(`INSERT INTO users (username, password) VALUES ($1,$2) RETURNING id`,
         [username, hash]).then(data => {
           user_id = data.id;
-          console.log(data);
-          req.login(user_id, function(err) {
-            setTimeout(function(){
-            console.log("login wait");
-            
-            }, 2000);
-            
-          });
-          res.redirect('../profile');
+          req.login(user_id, function(err) {});
+          res.redirect('../users/login');       
         });                 
     });  
   }

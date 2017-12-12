@@ -23,6 +23,7 @@ window.onload = function()  {
         else if(currentGame.revealedCards == 1) {
             console.log("Pused next card");
             cards[index].innerHTML = currentGame.cards[index];
+            cards[index].style.backgroundColor = 'white';
             cardsChosen.push(index);
             console.log("2 cards in array");
             checkCards();
@@ -35,6 +36,7 @@ window.onload = function()  {
             cardsChosen.push(index);
             currentGame.revealedCards++;
             cards[index].innerHTML = currentGame.cards[index];
+            cards[index].style.backgroundColor = 'white';
         }
     };
     for (var i = 0; i < cards.length; i++) {
@@ -55,6 +57,7 @@ socket.on('message', function(data) {
 	var message = document.createElement("li");
 	message.appendChild(document.createTextNode(data.message));
 	messageBox.appendChild(message);
+	$('.list-group').scrollTop($('.list-group')[0].scrollHeight);
 });
 
 
@@ -62,15 +65,34 @@ socket.on('message', function(data) {
 socket.on('gameCreate', function(data) {
 	socket.removeAllListeners("gameCreate");
 	currentGame = new Game(data);
-	joinStatus(currentGame.turn);
-	// createCards(currentGame.cards);	
-	handleTurn(socket);	
+	joinStatus(currentGame.turn);	
+	handleTurn(socket);
+	results(socket);	
 });
+
+var results = function(socket) {
+	socket.on('showResults', function(data){
+		var gameContainer = document.getElementById("game-container");
+		var statusContainer = document.getElementById("status-container");
+		var resultsContainer = document.getElementById("results-container");
+		var resultsWinner = document.getElementById("results-winner");
+		var resultsScore = document.getElementById("results-score");
+		while(gameContainer.hasChildNodes()){
+		 	gameContainer.removeChild(gameContainer.lastChild);
+		}
+		while(statusContainer.hasChildNodes())	{
+		 	statusContainer.removeChild(statusContainer.lastChild);
+		}
+		resultsWinner.innerHTML = currentGame.username + " Wins!";
+		resultsScore.innerHTML = data.turnsTaken + " Turns";
+		resultsContainer.style.display = "block";
+	})
+}
 
 var handleTurn = function(socket) {
 	socket.on('takeTurn', function(data) {
 		if(currentGame.turn == true){
-			//event listeners add
+			currentGame.turnsTaken++;
             for (var i = 0; i < cards.length; i++) {
                 var index = cards[i].getAttribute("data-value");
                 if(successfulCardMatches.indexOf(index) === -1) {
@@ -90,10 +112,8 @@ var handleTurn = function(socket) {
 	socket.on('switchTurn', function(data) {
 		if(currentGame.turn == true){
 			currentGame.turn = false;
-			//event listeners destory
 		} else {
 			currentGame.turn = true;
-			//event listeners add
 		}
 	})
 }
@@ -128,6 +148,7 @@ var Game = function(socketData) {
     this.revealedCards = 0;
     this.correctCards = 0;
     this.matches = 0;
+    this.turnsTaken = 0;
 }
 var checkCards = function() {
     var classname = document.getElementsByClassName("card-contents");
@@ -138,16 +159,20 @@ var checkCards = function() {
         classname[cardsChosen[1]].removeEventListener('click', myFunction, false);              
         console.log("Cards match");
         currentGame.matches++;
-        input = 'made match ' + currentGame.matches + ' of 8'
+        input = 'Made match ' + currentGame.matches + ' of 8'
         socket.emit('message', {
             room: currentGame.room,
             message: input,
             username: currentGame.username
         });
-
+        if(currentGame.matches == 8){
+        	socket.emit('endGame', {
+        		turnsTaken: currentGame.turnsTaken,
+        		usersname: username,
+        		room: currentGame.room
+        	});
+        }
     }
-    console.log(classname[cardsChosen[0]].innerHTML);
-    console.log(classname[cardsChosen[1]].innerHTML);
     socket.emit('endTurn', {room: currentGame.room});
 }
 
@@ -157,8 +182,9 @@ function hideCards()  {
             var index = cards[i].getAttribute("data-value");
             if(successfulCardMatches.indexOf(index) === -1) {
                 cards[i].innerHTML = "";
+                cards[i].style.backgroundColor = '#FCFCFC';
             }
         }
-    }, 2500);  
+    }, 2000);  
 }
 
