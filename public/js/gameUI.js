@@ -168,7 +168,7 @@ var checkCards = function() {
         if(currentGame.matches == 8){
         	socket.emit('endGame', {
         		turnsTaken: currentGame.turnsTaken,
-        		usersname: username,
+        		usersname: currentGame.username,
         		room: currentGame.room
         	});
         }
