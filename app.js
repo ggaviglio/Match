@@ -90,7 +90,7 @@ app.use(expressValidator({
 
 // // Global Vars
 app.use(function(req, res, next) {
-  // res.locals.isAuthenticated = req.isAuthenticated();
+  res.locals.isAuthenticated = req.isAuthenticated();
   res.locals.user = req.user || null;
   res.locals.environment = process.env.NODE_ENV;
   next();

@@ -182,7 +182,7 @@ function hideCards()  {
             var index = cards[i].getAttribute("data-value");
             if(successfulCardMatches.indexOf(index) === -1) {
                 cards[i].innerHTML = "M!";
-                cards[i].style.backgroundColor = '#404040';
+                cards[i].style.backgroundColor = '#F9F9F9';
             }
         }
     }, 2000);  

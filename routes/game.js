@@ -9,12 +9,12 @@ username = null;
 playersJoined = 0;
 
 /* GET profile page. */
-router.get('/', function(req, res) {
-	username = req.user.username;
-	if (req.isAuthenticated() == false){
-		res.redirect('../');
-	} else {
+router.get('/', function(req, res) {	
+	if (req.isAuthenticated() == true){
+		username = req.user.username;
 		res.render('game', { title: 'Match!', username: req.user.username, test_username: 'test username' });
+	} else {		
+		res.redirect('../');
 	}   
 });
 

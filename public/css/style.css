@@ -99,7 +99,7 @@ body {
   border: 2px solid lightgrey;
   padding: 5px;
   font-size: 28px;
-  background-color: #404040;
+  background-color: #F9F9F9;
   height: 50px;
   color: rgb(101,164,215);
   font-family: 'Anton', sans-serif;
@@ -134,4 +134,8 @@ body {
 
 #results-container, #register-success{
   display:none;
+}
+
+.nav-pills a{
+  color:black;
 }
