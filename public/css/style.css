@@ -139,3 +139,7 @@ body {
 .nav-pills a{
   color:black;
 }
+
+#rules{
+  height:140px;
+}
