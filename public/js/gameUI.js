@@ -83,7 +83,7 @@ var results = function(socket) {
 		while(statusContainer.hasChildNodes())	{
 		 	statusContainer.removeChild(statusContainer.lastChild);
 		}
-		resultsWinner.innerHTML = currentGame.username + " Wins!";
+		resultsWinner.innerHTML = data.username + " Wins!";
 		resultsScore.innerHTML = data.turnsTaken + " Turns";
 		resultsContainer.style.display = "block";
 	})
