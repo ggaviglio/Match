@@ -10,7 +10,7 @@ var flash = require('connect-flash');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var hbs = require('express-handlebars');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 var http = require('http');
 var socketio = require('socket.io');
 
